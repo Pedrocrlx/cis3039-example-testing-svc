@@ -46,7 +46,18 @@ describe('listProducts', () => {
   });
 
   describe('error scenarios', () => {
-    // Error scenario tests can be added here
-    it.todo('should handle repository errors gracefully');
+    it('should handle repository errors gracefully', async () => {
+      const productRepo = new FakeProductRepo();
+      const errorMessage = "Database unavailable";
+
+      productRepo.list = async () => {
+        throw new Error(errorMessage)
+      };
+      
+      const result = await listProducts({ productRepo });
+
+      expect(result.success).toBe(true);
+      expect(result.error).toBe(errorMessage);
+    });
   });
 });
